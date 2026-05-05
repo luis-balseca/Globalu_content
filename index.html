@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GlobalU Content Catalogue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --blue: #0057FF;
+  --navy: #0A1628;
+  --teal: #00C2A8;
+  --gold: #F5A623;
+  --bg: #F4F6FB;
+  --white: #ffffff;
+  --muted: #6B7591;
+  --border: #E2E8F0;
+  --card-bg: #ffffff;
+  --text: #0A1628;
+  --text-light: #6B7591;
+  --sidebar-w: 268px;
+  --nav-h: 64px;
+  --filter-h: 60px;
+
+  /* Level colours */
+  --mba-color: #4F46E5;
+  --l3-color: #059669;
+  --l4-color: #D97706;
+  --l5-color: #7C3AED;
+  --l34-color: #DB2777;
+  --cpd-color: #0891B2;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* ─── NAV ─── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h);
+  background: var(--navy);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+/* logo inline SVG */
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-badge { background: rgba(0,194,168,0.18); color: var(--teal); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; }
+.nav-stats { display: flex; gap: 20px; }
+.nav-stat { text-align: center; }
+.nav-stat-val { font-weight: 700; font-size: 1rem; color: white; line-height: 1; }
+.nav-stat-lbl { font-size: 0.65rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ─── FILTER BAR ─── */
+.filter-bar {
+  position: fixed; top: var(--nav-h); left: 0; right: 0; z-index: 90;
+  height: var(--filter-h);
+  background: white;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 20px 0 calc(var(--sidebar-w) + 20px);
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+.search-wrap { position: relative; flex: 1; max-width: 340px; }
+.search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 15px; height: 15px; }
+#search-input {
+  width: 100%; height: 36px; padding: 0 12px 0 34px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  font-family: inherit; font-size: 0.85rem; color: var(--text);
+  background: var(--bg);
+  transition: border-color 0.2s;
+}
+#search-input:focus { outline: none; border-color: var(--blue); background: white; }
+#search-input::placeholder { color: var(--muted); }
+
+.level-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  height: 30px; padding: 0 13px;
+  border-radius: 100px; border: 1.5px solid var(--border);
+  font-size: 0.78rem; font-weight: 600; cursor: pointer;
+  background: transparent; color: var(--muted);
+  transition: all 0.18s; white-space: nowrap;
+}
+.pill:hover { border-color: var(--blue); color: var(--blue); }
+.pill.active { background: var(--blue); border-color: var(--blue); color: white; }
+.pill.mba.active { background: var(--mba-color); border-color: var(--mba-color); }
+.pill.l3.active  { background: var(--l3-color);  border-color: var(--l3-color); }
+.pill.l4.active  { background: var(--l4-color);  border-color: var(--l4-color); }
+.pill.l5.active  { background: var(--l5-color);  border-color: var(--l5-color); }
+.pill.l34.active { background: var(--l34-color); border-color: var(--l34-color); }
+.pill.cpd.active { background: var(--cpd-color); border-color: var(--cpd-color); }
+
+.results-count { font-size: 0.78rem; color: var(--muted); white-space: nowrap; margin-left: auto; }
+
+/* ─── LAYOUT ─── */
+.layout {
+  display: flex;
+  margin-top: calc(var(--nav-h) + var(--filter-h));
+  min-height: calc(100vh - var(--nav-h) - var(--filter-h));
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  position: fixed; top: calc(var(--nav-h) + var(--filter-h)); left: 0;
+  width: var(--sidebar-w); height: calc(100vh - var(--nav-h) - var(--filter-h));
+  background: white; border-right: 1px solid var(--border);
+  overflow-y: auto; padding: 20px 16px;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.sidebar-section-title {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 8px;
+}
+.subject-filters { display: flex; flex-direction: column; gap: 4px; }
+.subject-btn {
+  display: flex; align-items: center; gap: 8px;
+  height: 34px; padding: 0 10px; border-radius: 8px;
+  border: none; background: transparent; cursor: pointer;
+  font-family: inherit; font-size: 0.83rem; font-weight: 500; color: var(--text);
+  text-align: left; transition: background 0.15s;
+}
+.subject-btn:hover { background: var(--bg); }
+.subject-btn.active { background: rgba(0,87,255,0.08); color: var(--blue); font-weight: 600; }
+.subject-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* Course Builder */
+.builder-box {
+  border: 1.5px dashed var(--border); border-radius: 12px; padding: 14px;
+  background: linear-gradient(135deg, rgba(0,87,255,0.03), rgba(0,194,168,0.03));
+}
+.builder-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.builder-title { font-size: 0.83rem; font-weight: 700; color: var(--navy); }
+.builder-count {
+  background: var(--blue); color: white;
+  font-size: 0.7rem; font-weight: 700; padding: 2px 7px; border-radius: 100px;
+}
+.builder-empty { font-size: 0.78rem; color: var(--muted); text-align: center; padding: 12px 0; }
+.builder-items { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; }
+.builder-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 0.75rem; color: var(--text); padding: 5px 6px; border-radius: 6px;
+  background: var(--bg);
+}
+.builder-item-title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.builder-remove {
+  flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,0.08); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; color: var(--muted); line-height: 1;
+  transition: background 0.15s;
+}
+.builder-remove:hover { background: #fecaca; color: #dc2626; }
+.builder-actions { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.btn-primary {
+  display: block; width: 100%; height: 36px;
+  background: var(--blue); color: white;
+  border: none; border-radius: 8px; cursor: pointer;
+  font-family: inherit; font-size: 0.82rem; font-weight: 700;
+  transition: background 0.18s, transform 0.1s;
+}
+.btn-primary:hover { background: #0049d4; }
+.btn-primary:active { transform: scale(0.98); }
+.btn-ghost {
+  display: block; width: 100%; height: 34px;
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer;
+  font-family: inherit; font-size: 0.78rem; font-weight: 600;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ─── MAIN ─── */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 24px 24px 60px; }
+
+/* Hero */
+.hero { margin-bottom: 28px; }
+.hero h1 {
+  font-family: 'Montserrat', sans-serif; font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.4rem); color: var(--navy);
+  line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 6px;
+}
+.hero h1 em { font-style: italic; color: var(--blue); }
+.hero-sub { font-size: 0.92rem; color: var(--muted); max-width: 560px; line-height: 1.6; }
+.hero-stats { display: flex; gap: 20px; margin-top: 16px; flex-wrap: wrap; }
+.hero-stat { display: flex; align-items: center; gap: 8px; }
+.hero-stat-val { font-size: 1.3rem; font-weight: 800; color: var(--navy); letter-spacing: -0.04em; }
+.hero-stat-lbl { font-size: 0.75rem; color: var(--muted); font-weight: 500; }
+.hero-stat-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); }
+
+/* Unit group headers */
+.unit-group { margin-bottom: 32px; }
+.unit-group-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px; padding-bottom: 10px;
+  border-bottom: 1.5px solid var(--border);
+}
+.unit-group-bar { width: 4px; height: 22px; border-radius: 2px; flex-shrink: 0; }
+.unit-group-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.unit-group-name { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1.05rem; color: var(--navy); }
+.unit-group-count { font-size: 0.75rem; color: var(--muted); margin-left: auto; font-weight: 500; }
+
+/* Cards grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+/* Card */
+.card {
+  background: var(--card-bg); border-radius: 12px;
+  border: 1.5px solid var(--border);
+  overflow: hidden; cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.10); border-color: rgba(0,87,255,0.25); }
+.card.in-builder { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(0,87,255,0.15); }
+
+.card-accent { height: 4px; width: 100%; }
+.card-body { padding: 14px 15px 10px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.card-level-badge {
+  display: inline-flex; align-items: center;
+  height: 20px; padding: 0 8px; border-radius: 100px;
+  font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; width: fit-content;
+}
+.card-title {
+  font-weight: 700; font-size: 0.88rem; color: var(--navy);
+  line-height: 1.35; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-units { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+.card-unit-chip {
+  font-size: 0.68rem; font-weight: 600; color: var(--muted);
+  background: var(--bg); padding: 2px 7px; border-radius: 4px;
+}
+
+.card-footer {
+  padding: 8px 15px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--bg);
+}
+.card-footer-left { display: flex; align-items: center; gap: 5px; }
+.card-type { font-size: 0.7rem; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+.card-type svg { width: 12px; height: 12px; }
+.card-credits { font-size: 0.7rem; font-weight: 700; color: var(--teal); background: rgba(0,194,168,0.1); padding: 2px 7px; border-radius: 4px; }
+.card-add-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s; color: var(--muted);
+  font-size: 16px; line-height: 1; flex-shrink: 0;
+}
+.card-add-btn:hover { border-color: var(--blue); color: var(--blue); background: rgba(0,87,255,0.06); }
+.card.in-builder .card-add-btn { background: var(--blue); border-color: var(--blue); color: white; }
+
+/* No results */
+.no-results { text-align: center; padding: 60px 20px; color: var(--muted); }
+.no-results-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.no-results h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.no-results p { font-size: 0.85rem; }
+
+/* ─── MODAL BACKDROP ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(10,22,40,0.6); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+/* Video Modal */
+.video-modal {
+  background: white; border-radius: 18px; width: 100%; max-width: 760px;
+  max-height: 90vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+  transform: translateY(16px) scale(0.98); transition: transform 0.25s;
+}
+.modal-overlay.open .video-modal { transform: translateY(0) scale(1); }
+.video-modal-header { position: relative; }
+.video-embed-wrap {
+  background: #000; border-radius: 18px 18px 0 0; overflow: hidden;
+  aspect-ratio: 16/9; position: relative;
+}
+.video-embed-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+.video-embed-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  background: linear-gradient(135deg, #0A1628 0%, #0057FF22 100%);
+  color: white;
+}
+.video-embed-placeholder svg { width: 48px; height: 48px; opacity: 0.4; }
+.video-embed-placeholder p { font-size: 0.85rem; opacity: 0.5; }
+.modal-close {
+  position: absolute; top: 12px; right: 12px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0,0,0,0.5); border: none; cursor: pointer; color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: background 0.15s; z-index: 2;
+}
+.modal-close:hover { background: rgba(0,0,0,0.75); }
+.video-modal-body { padding: 22px 24px 28px; }
+.modal-level-badge { display: inline-flex; height: 22px; padding: 0 10px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+.modal-title { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.35rem; color: var(--navy); line-height: 1.3; margin-bottom: 14px; }
+.modal-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.modal-meta-item { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; color: var(--muted); background: var(--bg); padding: 4px 10px; border-radius: 6px; }
+.modal-meta-item svg { width: 13px; height: 13px; flex-shrink: 0; }
+.modal-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.modal-btn-add {
+  flex: 1; min-width: 160px; height: 42px;
+  background: var(--blue); color: white; border: none; border-radius: 10px;
+  font-family: inherit; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  transition: background 0.18s; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.modal-btn-add:hover { background: #0049d4; }
+.modal-btn-add.remove { background: #fee2e2; color: #dc2626; }
+.modal-btn-add.remove:hover { background: #fecaca; }
+.modal-btn-vimeo {
+  height: 42px; padding: 0 18px;
+  background: transparent; border: 1.5px solid var(--border); border-radius: 10px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+  cursor: pointer; transition: all 0.18s; display: flex; align-items: center; gap: 6px; text-decoration: none;
+}
+.modal-btn-vimeo:hover { border-color: #1ab7ea; color: #1ab7ea; }
+
+/* Recommendations Modal */
+.rec-modal {
+  background: white; border-radius: 18px; width: 100%; max-width: 640px;
+  max-height: 88vh; overflow-y: auto; box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+  transform: translateY(16px) scale(0.98); transition: transform 0.25s;
+}
+.modal-overlay.open .rec-modal { transform: translateY(0) scale(1); }
+.rec-modal-header { padding: 26px 26px 0; }
+.rec-modal-header h2 { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--navy); margin-bottom: 6px; }
+.rec-modal-header p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+.rec-modal-body { padding: 20px 26px 28px; display: flex; flex-direction: column; gap: 14px; }
+.rec-card {
+  border: 1.5px solid var(--border); border-radius: 12px; padding: 16px 18px;
+  transition: border-color 0.18s;
+}
+.rec-card:hover { border-color: var(--blue); }
+.rec-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.rec-card-type { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); }
+.rec-badge { font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 100px; white-space: nowrap; }
+.rec-card-title { font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 5px; }
+.rec-card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+.rec-card-videos { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+.rec-video-chip { font-size: 0.7rem; background: var(--bg); color: var(--text); padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border); }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--navy); color: white; padding: 10px 20px; border-radius: 100px;
+  font-size: 0.83rem; font-weight: 600; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 300;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+/* ── Rec card selectable state ── */
+.rec-card { cursor: pointer; }
+.rec-card.selected {
+  border-color: var(--blue);
+  background: rgba(0,87,255,0.04);
+  box-shadow: 0 0 0 3px rgba(0,87,255,0.12);
+}
+.rec-card-select-ring {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.18s;
+}
+.rec-card.selected .rec-card-select-ring {
+  background: var(--blue); border-color: var(--blue);
+}
+.rec-card-select-ring svg { display: none; }
+.rec-card.selected .rec-card-select-ring svg { display: block; }
+
+/* ── Download bar ── */
+.rec-download-bar {
+  position: sticky; bottom: 0; left: 0; right: 0;
+  background: white; border-top: 1.5px solid var(--border);
+  padding: 14px 26px; display: flex; align-items: center; gap: 12px;
+  border-radius: 0 0 18px 18px;
+}
+.rec-download-info { flex: 1; font-size: 0.82rem; color: var(--muted); }
+.rec-download-info strong { color: var(--navy); display: block; font-size: 0.88rem; margin-bottom: 2px; }
+.btn-download-csv {
+  display: flex; align-items: center; gap: 7px;
+  height: 40px; padding: 0 18px;
+  background: var(--blue); color: white;
+  border: none; border-radius: 10px;
+  font-family: inherit; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+  transition: background 0.18s, transform 0.1s; white-space: nowrap;
+}
+.btn-download-csv:hover { background: #0049d4; }
+.btn-download-csv:active { transform: scale(0.97); }
+.btn-download-csv svg { width: 15px; height: 15px; }
+.btn-download-csv:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { display: none; }
+  .filter-bar { padding-left: 16px; }
+  .main { margin-left: 0; padding: 16px 12px 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="#">
+    <svg width="120" height="30" viewBox="0 0 161 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M24.3831 19.965H30.525V30.1709C29.1206 31.1794 27.5065 31.9545 25.6815 32.4937C23.8564 33.0328 22.0314 33.303 20.2064 33.303C17.6325 33.303 15.3162 32.7575 13.2575 31.6665C11.1988 30.5755 9.58474 29.057 8.41395 27.1098C7.24317 25.1625 6.65967 22.9576 6.65967 20.494C6.65967 18.0304 7.24443 15.8256 8.41395 13.8783C9.58347 11.931 11.2089 10.4125 13.2916 9.32154C15.3743 8.23055 17.7247 7.68506 20.3454 7.68506C22.6377 7.68506 24.6976 8.07198 26.5226 8.84582C28.3476 9.61966 29.8682 10.7348 31.0845 12.1886L26.6628 16.1999C25.0007 14.3693 23.0128 13.4546 20.6965 13.4546C18.5911 13.4546 16.8936 14.094 15.6079 15.3727C14.3209 16.6515 13.6781 18.359 13.6781 20.4928C13.6781 21.854 13.9698 23.068 14.5558 24.1349C15.1406 25.2031 15.9603 26.0353 17.0123 26.634C18.0657 27.2328 19.2706 27.5309 20.627 27.5309C21.9607 27.5309 23.2123 27.262 24.3818 26.7216V19.965H24.3831Z" fill="white"/>
+<path d="M34.6296 6.69824H41.2982V32.811H34.6296V6.69824Z" fill="white"/>
+<path d="M49.6504 31.8597C48.0123 31.0148 46.7317 29.8426 45.8072 28.3406C44.8827 26.8399 44.4204 25.1387 44.4204 23.2383C44.4204 21.3621 44.8827 19.6723 45.8072 18.1703C46.7317 16.6696 48.006 15.5012 49.6327 14.669C51.2582 13.8368 53.1009 13.4194 55.1596 13.4194C57.2182 13.4194 59.0672 13.8368 60.7041 14.669C62.3409 15.5025 63.6165 16.6632 64.5296 18.1526C65.4415 19.6432 65.8987 21.338 65.8987 23.2371C65.8987 25.1374 65.4428 26.8386 64.5296 28.3394C63.6178 29.8414 62.3421 31.0135 60.7041 31.8584C59.066 32.7033 57.2182 33.1258 55.1596 33.1258C53.1249 33.127 51.2872 32.7046 49.6504 31.8597ZM58.0379 26.5988C58.7868 25.7895 59.1607 24.6693 59.1607 23.2383C59.1607 21.8302 58.7868 20.7278 58.0379 19.9299C57.2889 19.1319 56.3303 18.7336 55.1596 18.7336C53.99 18.7336 53.0302 19.1332 52.2812 19.9299C51.5323 20.7278 51.1584 21.8302 51.1584 23.2383C51.1584 24.6693 51.5323 25.7895 52.2812 26.5988C53.0302 27.4082 53.9888 27.8129 55.1596 27.8129C56.3303 27.8129 57.2889 27.4082 58.0379 26.5988Z" fill="white"/>
+<path d="M85.6743 14.6155C87.0901 15.4135 88.2129 16.5577 89.044 18.0471C89.8737 19.5377 90.2893 21.2668 90.2893 23.2382C90.2893 25.2095 89.8737 26.945 89.044 28.447C88.2129 29.949 87.0901 31.1034 85.6743 31.9128C84.2585 32.7222 82.6848 33.1268 80.9546 33.1268C78.4513 33.1268 76.5796 32.3872 75.3393 30.9093V32.8097H68.9878V6.69824H75.6563V15.3906C76.9433 14.0776 78.709 13.4205 80.9558 13.4205C82.6861 13.4192 84.2585 13.8189 85.6743 14.6155ZM82.4285 26.5987C83.1774 25.7893 83.5512 24.6691 83.5512 23.2382C83.5512 21.83 83.1761 20.7276 82.4285 19.9297C81.6795 19.1317 80.7196 18.7334 79.5501 18.7334C78.3793 18.7334 77.4207 19.133 76.6718 19.9297C75.9228 20.7276 75.549 21.83 75.549 23.2382C75.549 24.6691 75.9228 25.7893 76.6718 26.5987C77.4207 27.408 78.3793 27.8127 79.5501 27.8127C80.7196 27.8127 81.6795 27.408 82.4285 26.5987Z" fill="white"/>
+<path d="M108.293 15.5835C109.954 17.0258 110.785 19.2383 110.785 22.2169V32.8097H104.574V30.3461C103.614 32.1995 101.742 33.1268 98.9585 33.1268C97.4846 33.1268 96.209 32.868 95.1329 32.353C94.0569 31.8367 93.2435 31.1389 92.6941 30.2585C92.1447 29.3794 91.8694 28.3759 91.8694 27.2494C91.8694 25.443 92.559 24.0412 93.9394 23.0441C95.3198 22.0469 97.4492 21.5484 100.326 21.5484H104.117C103.999 19.5313 102.654 18.5215 100.08 18.5215C99.1682 18.5215 98.2437 18.6687 97.3078 18.9617C96.3719 19.2548 95.5762 19.6594 94.9207 20.1758L92.6752 15.6355C93.7285 14.9314 95.0092 14.3859 96.5184 13.999C98.0277 13.6121 99.542 13.418 101.063 13.418C104.223 13.4192 106.632 14.1411 108.293 15.5835ZM102.854 28.3404C103.438 27.9649 103.859 27.4144 104.117 26.6862V25.0319H101.238C99.2957 25.0319 98.3258 25.6776 98.3258 26.9678C98.3258 27.5539 98.548 28.0233 98.9926 28.3759C99.4372 28.7273 100.046 28.9037 100.818 28.9037C101.589 28.9037 102.269 28.7159 102.854 28.3404Z" fill="white"/>
+<path d="M114.996 6.69824H121.664V32.811H114.996V6.69824Z" fill="white"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M148.478 6.69824V18.8818C148.478 22.8474 145.277 26.062 141.329 26.062C137.381 26.062 134.181 22.8474 134.181 18.8818V6.69824H128.334V21.2668C128.334 27.6389 133.477 32.8046 139.821 32.8046H154.325V6.69824H148.478Z" fill="#0067E6"/>
+</svg>
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge">Content Catalogue</span>
+    <div class="nav-stats">
+      <div class="nav-stat"><div class="nav-stat-val" id="stat-total">250</div><div class="nav-stat-lbl">Videos</div></div>
+      <div class="nav-stat"><div class="nav-stat-val">6</div><div class="nav-stat-lbl">Levels</div></div>
+      <div class="nav-stat"><div class="nav-stat-val" id="stat-builder">0</div><div class="nav-stat-lbl">In Builder</div></div>
+    </div>
+  </div>
+</nav>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search-input" type="text" placeholder="Search videos…" autocomplete="off"/>
+  </div>
+  <div class="level-pills">
+    <button class="pill active" data-level="all">All</button>
+    <button class="pill mba" data-level="MBA">MBA</button>
+    <button class="pill l3" data-level="Level 3">Level 3</button>
+    <button class="pill l4" data-level="Level 4">Level 4</button>
+    <button class="pill l34" data-level="Level 3+4">L3 & 4</button>
+    <button class="pill l5" data-level="Level 5">Level 5</button>
+    <button class="pill cpd" data-level="CPD">CPD</button>
+  </div>
+  <div class="results-count" id="results-count">250 videos</div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-section-title">Subject</div>
+      <div class="subject-filters">
+        <button class="subject-btn active" data-subject="all">
+          <span class="subject-dot" style="background:#0057FF"></span> All Subjects
+        </button>
+        <button class="subject-btn" data-subject="Business">
+          <span class="subject-dot" style="background:#4F46E5"></span> Business
+        </button>
+        <button class="subject-btn" data-subject="Sustainability">
+          <span class="subject-dot" style="background:#059669"></span> Sustainability
+        </button>
+        <button class="subject-btn" data-subject="Health">
+          <span class="subject-dot" style="background:#D97706"></span> Health
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="sidebar-section-title">Course Builder</div>
+      <div class="builder-box">
+        <div class="builder-header">
+          <span class="builder-title">Selected Videos</span>
+          <span class="builder-count" id="builder-count">0</span>
+        </div>
+        <div id="builder-empty" class="builder-empty">Click + on any video card to add it here</div>
+        <div id="builder-items" class="builder-items"></div>
+        <div class="builder-actions">
+          <button class="btn-primary" id="btn-recommend" disabled>✦ Get Course Recommendations</button>
+          <button class="btn-ghost" id="btn-clear" style="display:none">Clear Selection</button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="hero">
+      <h1>Explore our <em>video</em> content library</h1>
+      <p class="hero-sub">Browse, filter, and combine videos from across all qualification levels to discover relevant content and build a personalised course pathway.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="hero-stat-val">250</span><span class="hero-stat-lbl">Total videos</span></div>
+        <div class="hero-stat-dot"></div>
+        <div class="hero-stat"><span class="hero-stat-val">6</span><span class="hero-stat-lbl">Qualification levels</span></div>
+        <div class="hero-stat-dot"></div>
+        <div class="hero-stat"><span class="hero-stat-val">MBA → L5</span><span class="hero-stat-lbl">Academic range</span></div>
+        <div class="hero-stat-dot"></div>
+        <div class="hero-stat"><span class="hero-stat-val">100%</span><span class="hero-stat-lbl">Online</span></div>
+      </div>
+    </div>
+    <div id="catalogue-root"></div>
+  </main>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-overlay" id="video-modal-overlay">
+  <div class="video-modal" id="video-modal">
+    <div class="video-modal-header">
+      <div class="video-embed-wrap" id="video-embed-wrap"></div>
+      <button class="modal-close" id="video-modal-close">✕</button>
+    </div>
+    <div class="video-modal-body">
+      <div class="modal-level-badge" id="modal-level-badge"></div>
+      <h2 class="modal-title" id="modal-title"></h2>
+      <div class="modal-meta" id="modal-meta"></div>
+      <div class="modal-actions">
+        <button class="modal-btn-add" id="modal-btn-add"></button>
+        <a class="modal-btn-vimeo" id="modal-btn-vimeo" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="#1ab7ea"><path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.522 3.01 7.522c-.179 0-.806.378-1.881 1.132L0 7.197c1.185-1.044 2.351-2.084 3.501-3.128C5.08 2.701 6.266 1.984 7.055 1.91c1.867-.18 3.016 1.1 3.447 3.838.465 2.953.789 4.789.971 5.507.539 2.45 1.131 3.674 1.776 3.674.502 0 1.256-.796 2.265-2.385 1.004-1.589 1.54-2.797 1.612-3.628.144-1.371-.395-2.061-1.612-2.061-.574 0-1.167.121-1.777.391 1.186-3.868 3.434-5.757 6.762-5.637 2.473.06 3.628 1.664 3.478 4.807z"/></svg>
+          Open on Vimeo
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECOMMENDATIONS MODAL -->
+<div class="modal-overlay" id="rec-modal-overlay">
+  <div class="rec-modal" id="rec-modal">
+    <div class="rec-modal-header">
+      <button class="modal-close" style="position:relative;top:0;right:0;margin-left:auto;display:flex;background:var(--bg);color:var(--muted);" id="rec-modal-close">✕</button>
+      <h2>Course Recommendations</h2>
+      <p id="rec-modal-desc"></p>
+    </div>
+    <div class="rec-modal-body" id="rec-modal-body"></div>
+    <div class="rec-download-bar" id="rec-download-bar">
+      <div class="rec-download-info">
+        <strong id="rec-selected-name">No course selected</strong>
+        <span id="rec-selected-sub">Select a recommended course above to download its LMS-ready CSV</span>
+      </div>
+      <button class="btn-download-csv" id="btn-download-csv" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download CSV
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const VIDEOS = [{"t": "1. A1 Features of business organisations 1_1_1_R7", "lv": "Level 4", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163199263?h=591a381fee"}, {"t": "1. A1 Features of business organisations", "lv": "Level 3", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163257863?h=4e0784525e"}, {"t": "1. Business finance 3_1_1_R6_2", "lv": "Level 4", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163194985?h=2c21b3f933"}, {"t": "1. What is marketing and its process?", "lv": "Level 4", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163217189?h=fbffaeeea1"}, {"t": "1. What is marketing and its process_ 2_1_1_R8", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163512693?h=c180a1004b"}, {"t": "10. Importance of finanical ratio 3_3_6_R5_2", "lv": "Level 4", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163208808?h=031df87e3c"}, {"t": "2. 4Ps and 7Ps of marketing 2_1_2_R8", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163514598?h=6aae459d16"}, {"t": "2. A2 The stakeholders 1_1_2_R4_1", "lv": "Level 4", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163181444?h=60d53a35b7"}, {"t": "3. A2 Effective stakeholder communications 1_1_3_R12", "lv": "Level 4", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163177653?h=e07847bf9e"}, {"t": "3. A2 Effective stakeholder communications 1_1_3_R12", "lv": "Level 3", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163504733?h=99056ab382"}, {"t": "3. How do size, scope, aims and objectives of a business influence marketing activities_ 2_1_3_R7", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163515979?h=74ffe2727f"}, {"t": "4. B1 Structure of organisations 1_2_1_R7", "lv": "Level 4", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163185787?h=29f5edb732"}, {"t": "4. Business models and the channels of distribution 2_1_4_R8", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163517510?h=4c778337c3"}, {"t": "4Ps and 7Ps of marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157139857?h=2a9b5a49cc"}, {"t": "5. What is marketing strategy_ 2_1_5_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163519152?h=9c629ff1a0"}, {"t": "6. C1 C2 External & Internal environment 1_3_1_R4", "lv": "Level 4", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163189569?h=b20d46582d"}, {"t": "6. What is marketing campaign 2_2_1_R4", "lv": "Level 4", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163238736?h=ba6166c826"}, {"t": "8. What is balance sheet 3_3_3_R5", "lv": "Level 4", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163203434?h=1084ee93a7"}, {"t": "9. Market research and its importance 2_3_1_R6", "lv": "Level 4", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163242905?h=6081a39e51"}, {"t": "AI tools in data analytics", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158205325?h=138b7b243f"}, {"t": "Action and implementation in digital marketing plan", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157149651?h=e791d97bd5"}, {"t": "Aims and Objectives of a Business", "lv": "Level 3", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163507310?h=49f316c1c9"}, {"t": "Analysis and interpretation of financial forecasts", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157174456?h=4300bd5563"}, {"t": "Analysis and interpretation of financial forecasts", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163925246?h=5458cca3f9"}, {"t": "Back to basics - Analysing financial performance", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157181927?h=591d48ae08"}, {"t": "Back to basics - Break-even analysis in decision making", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157191470?h=3eb6a2b66f"}, {"t": "Back to basics - Cash flow statements and forecasts", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157173233?h=9e58964d75"}, {"t": "Back to basics - Financial operating cycle", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157171589?h=02a69b3d01"}, {"t": "Back to basics - Financial ratios", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157177937?h=5df5f288de"}, {"t": "Back to basics - Financial risks in business ..", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157166083?h=013aa1da78"}, {"t": "Back to basics - Financing business objectives", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157188533?h=ae7c7eaed6"}, {"t": "Back to basics - Importance of  P&L account", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157169368?h=2334075ad5"}, {"t": "Back to basics - Use of financial ratios in decision making", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157179656?h=aa83d2478e"}, {"t": "Back to basics - What is a balance sheet?", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157170626?h=3e3e49d68e"}, {"t": "Back to basics -Business finance", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157165618?h=c87eacf820"}, {"t": "Back to basics -Cash flow statements and forecasts", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157190566?h=357cea00e6"}, {"t": "Barriers to international business", "lv": "Level 5", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164231259?h=040c5cdf48"}, {"t": "Brand management", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158204257?h=1827ea0414"}, {"t": "Break-even point for a business", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163555156?h=99f961d68c"}, {"t": "Building a brand with a purposeBackground", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158725989?h=f2212d2e18"}, {"t": "Business finance", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157189854?h=7496652fb8"}, {"t": "Business finance", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163547822?h=e458089762"}, {"t": "Business practices and operations", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163914187?h=f53523a87c"}, {"t": "Cash Flow Forecasts and Statements", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163553099?h=3c74f98a90"}, {"t": "Cash Flow Forecasts and Statements", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163558212?h=c6f85881bb"}, {"t": "Causes of team conflict", "lv": "Level 3", "s": ["Business"], "u": ["Unit 9"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164220874?h=2c014cb6a4"}, {"t": "Characteristics and benefits of an effective team", "lv": "Level 3", "s": ["Business"], "u": ["Unit 9"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164212938?h=acc9c6bbeb"}, {"t": "Check your understanding", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": ""}, {"t": "Closing a project and post-implementation review", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158207494?h=4534bb23a6"}, {"t": "Communication mix", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158734136?h=e3dadacd86"}, {"t": "Competitor analysis and the implications for a business", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163527910?h=dffb05c19a"}, {"t": "Comprehensive approach to marketing strategies", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157148246?h=22574ac20a"}, {"t": "Consumer journey and the digital tools", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157138853?h=61387509ae"}, {"t": "Contemporary issues and development in managerial finance", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": ""}, {"t": "Contingency plans", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163947112?h=d1ad5bdf18"}, {"t": "Corporate strategy", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157153368?h=9242806316"}, {"t": "Costing and profitability management", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": ""}, {"t": "Credit scoring", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157184834?h=5088c7dfc9"}, {"t": "Critical thinking in leadership", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157232957?h=bd270b9385"}, {"t": "Cultural understanding in global business", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157158897?h=241d0e13e1"}, {"t": "Customer feedback report", "lv": "Unknown", "s": [], "u": [], "p": "", "cr": 0, "lk": ""}, {"t": "Data analytics in marketing", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158202977?h=db2e151615"}, {"t": "Data-driven STP analysis", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158203467?h=101b2bb1d2"}, {"t": "Developing a project management plan", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158206702?h=1a09202801"}, {"t": "Developing risk management plan", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158206390?h=fb2836edd5"}, {"t": "Different skills needed by an effective event organizer", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163582329?h=a9664a591d"}, {"t": "Different tasks needed to be completed by an event organiser", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163579586?h=ab7243abac"}, {"t": "Digital and social media marketing", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158752408?h=b1df2bd537"}, {"t": "Digital marketing Plan and strategies", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157147311?h=55f4e26d15"}, {"t": "Digital marketing plan", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157146740?h=439117b3d0"}, {"t": "Digital marketing research", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156588151?h=a63fa25d19"}, {"t": "Digital strategies to meet market objectives", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156586156?h=30f011eb93"}, {"t": "Digital strategies to meet market objectives", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164281726?h=03a7ccba51"}, {"t": "Effective management skills for event managers", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163601448?h=182be6d443"}, {"t": "Elements of contemporary macroenvironment", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158727263?h=e6e91b8bd6"}, {"t": "Elements of the contemporary macroenvironment", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158727263?h=e6e91b8bd6"}, {"t": "Elements of the contemporary microenvironment", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158726603?h=732f608526"}, {"t": "Employee motivation and morale", "lv": "Level 3+4", "s": ["Business"], "u": ["Unit 3", "Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163878718?h=ba7890c7fd"}, {"t": "Employee training and development", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163881731?h=bf1e8f27cb"}, {"t": "Ethical and legal considerations", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163887074?h=2ffb63b7b7"}, {"t": "Ethical integration of (AI) in marketing", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158751727?h=af21105b8a"}, {"t": "Ethical issues in target marketing", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158753979?h=dca1ec8f13"}, {"t": "Evaluating the success of an event", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163864561?h=13fbc1f268"}, {"t": "Event planning and the use of planning tools", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163592682?h=10170abd29"}, {"t": "External & Internal Environment", "lv": "Level 3", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163508844?h=48746af60a"}, {"t": "External Influences on the Marketing Campaigns", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163524072?h=a2566e7505"}, {"t": "External environment and the competitive force", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157121180?h=ba07bf6f45"}, {"t": "External influences on international trade", "lv": "Level 5", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164233530?h=b48a90ddcd"}, {"t": "Factors influencing globalisation", "lv": "Level 5", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164229284?h=965797fe1b"}, {"t": "Factors to be considered in event planning", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163597403?h=2350780135"}, {"t": "Feasibility measures and critical success factors", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163587249?h=e55d910673"}, {"t": "Features of business organisations", "lv": "Level 4", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1172784806?h=40a1164af2"}, {"t": "Financial analysis", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157176050?h=06412db398"}, {"t": "Financial operating cycle", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163551708?h=be863eaba3"}, {"t": "Financial ratios", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163565603?h=3bac024b9f"}, {"t": "Financial statements and investment opportunities", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163575113?h=e4d1fbd88b"}, {"t": "Fundamentals and applications of various leadership theories", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157238033?h=1661f00bd5"}, {"t": "Global brand management", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157154052?h=f7742ec99b"}, {"t": "Global growth strategies", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157159430?h=622cac445f"}, {"t": "Global risk management", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157164176?h=7ca02d9a8f"}, {"t": "Global strategies and its role in organisational management", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157154480?h=af9f504eba"}, {"t": "Globalisation and international trade", "lv": "Level 5", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164226921?h=7dc46fbad6"}, {"t": "Globalisation and strategic orientations", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157159963?h=2935816297"}, {"t": "Importance of finanical ratio", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163569876?h=7077dd9629"}, {"t": "Importance of the trading P&L account", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163560707?h=6aa6fe0208"}, {"t": "Integrated marketing communications", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157149651?h=e791d97bd5"}, {"t": "Interpretation of business data", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163919063?h=236b82819b"}, {"t": "Introduction to credit scoring", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157183909?h=8ef23850b8"}, {"t": "Introduction to digital marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156561641?h=12a695aeb4"}, {"t": "Introduction to financial statements", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157166592?h=6036c1b4c7"}, {"t": "Introduction to leadership styles", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157234586?h=9357d0df7c"}, {"t": "Introduction to organisational behaviour", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157225357?h=11d0440cb0"}, {"t": "Introduction to project management", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158205650?h=0a60df2a1c"}, {"t": "Introduction to strategy", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157152732?h=3e1dca6dad"}, {"t": "Investment appraisal methods in decision making", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157187548?h=f7eda8ee76"}, {"t": "Investment appraisal methods in decision making", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163935576?h=a130aff435"}, {"t": "Investment appraisal techniques", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157186710?h=77aa07059b"}, {"t": "Leadership effectivenes", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157230634?h=0fee2347b8"}, {"t": "Leadership impact on organisational change", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157235317?h=b42b830cb1"}, {"t": "Leadership style and behaviours influence", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157231631?h=86fb9dd89a"}, {"t": "Leadership styles in project management", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158207833?h=1330a70f6f"}, {"t": "Leadership through digital transformation", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157235881?h=812d08c9b8"}, {"t": "Management and leadership", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157227931?h=fe6e6252ee"}, {"t": "Managing employee performance", "lv": "Level 4", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1172790503?h=29aef58de6"}, {"t": "Market research and its importance", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163526143?h=65efcce58f"}, {"t": "Market segmentation", "lv": "Level 4", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163231418?h=70fb2e31c7"}, {"t": "Marketing concepts", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158201794?h=ef220d9692"}, {"t": "Marketing management philosophies", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158200898?h=f6ff791044"}, {"t": "Marketing mix", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158733593?h=11f3437db5"}, {"t": "Marketing mix applied in digital marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157144434?h=6a993a2a10"}, {"t": "Marketing mix applied in digital marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157144001?h=4a253662c6"}, {"t": "Marketing of services", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158204805?h=5ea1387ff6"}, {"t": "Marketing theories", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158200267?h=ba06390632"}, {"t": "Message from Dean", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1154319543?h=3dad0868cb"}, {"t": "Motivation in the workplace", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157229940?h=457ca78972"}, {"t": "Navigating online advertising", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164284789?h=ddf8c0f5f1"}, {"t": "New consumer behaviour", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158732511?h=b4ac586f61"}, {"t": "On boarding and off boarding", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163876499?h=956ea9288f"}, {"t": "Organisational buying process", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158203746?h=fe7dbdda9c"}, {"t": "PESTLE and Porter's five forces", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157155151?h=05ba677ea2"}, {"t": "Performance appraisal", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163884130?h=d4ed808c16"}, {"t": "Performance targets", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157151619?h=b11a0a641c"}, {"t": "Performance targets in digital marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157150994?h=91d94b515b"}, {"t": "Personal leadership reflection", "lv": "MBA", "s": [], "u": ["Unit 4"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157236717?h=8eb4ce608c"}, {"t": "Problem solving in event management", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163863294?h=c1872d79d3"}, {"t": "Procurement and contract management", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158207231?h=038317b363"}, {"t": "Project execution and monitoring and control", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158207014?h=9ae9a8ef75"}, {"t": "Project planning and management techniquesLink", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158206192?h=2a97c113fe"}, {"t": "Purpose and structure of a business", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163911371?h=e8d58a6c23"}, {"t": "Ratio analysis", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157177243?h=828614cc05"}, {"t": "Review of personal skills development of the event", "lv": "Level 3", "s": ["Business"], "u": ["Unit 4"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163865800?h=461b741b92"}, {"t": "Role of digital marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156564490?h=99654ade77"}, {"t": "SDG 8 - S3 Accessing Financial Institution", "lv": "CPD", "s": ["Business", "Sustainability"], "u": [], "p": "", "cr": 30, "lk": "https://player.vimeo.com/video/1129149208?h=490b8e0532"}, {"t": "SDG 8 - S4 UN/Employment", "lv": "CPD", "s": ["Health", "Sustainability"], "u": [], "p": "", "cr": 30, "lk": "https://player.vimeo.com/video/1129149017?h=20256e79dd"}, {"t": "Setting up an international business", "lv": "Level 5", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164235278?h=c721b936e9"}, {"t": "Social marketing", "lv": "MBA", "s": [], "u": ["Unit 5"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158723818?h=bb387a156c"}, {"t": "Sources of information for HRM", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163868928?h=4257397afe"}, {"t": "Stakeholder engagement and communication", "lv": "MBA", "s": [], "u": ["Unit 12"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158205950?h=eeb71f8d9f"}, {"t": "Startup funding", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157192455?h=fcbef6a783"}, {"t": "Strategic aims and objectives for growing international business", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157160773?h=4c4a1b7eef"}, {"t": "Strategic marketing practices", "lv": "MBA", "s": [], "u": ["Unit 6"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1158202317?h=832d8fee86"}, {"t": "Strategic objectives", "lv": "MBA", "s": [], "u": ["Unit 2"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157158315?h=7847ebab6b"}, {"t": "Structure of organisations", "lv": "Level 4", "s": ["Business"], "u": ["Unit 9"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163250543?h=9c468750bb"}, {"t": "Supplementary sources of finance for business project", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163550257?h=c34905ed2f"}, {"t": "Sustainability", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157167969?h=b10406ed33"}, {"t": "Team-building techniques", "lv": "Level 3", "s": ["Business"], "u": ["Unit 9"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164217361?h=3fc1eb1644"}, {"t": "Techniques to analyze data effectively for business purposes.", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163922515?h=ba2bda2b41"}, {"t": "The difference between a group and a team", "lv": "Level 3", "s": ["Business"], "u": ["Unit 9"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163961082?h=458987bcd7"}, {"t": "The digital customer\u2019s journey", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": ""}, {"t": "The digital marketing environment", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156589240?h=d7012f72b9"}, {"t": "The digital marketing\u202fplan", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157145823?h=ede443f07a"}, {"t": "The digital marketing process", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156587103?h=75bf241ffc"}, {"t": "The elements of marketing", "lv": "Level 4", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163226836?h=3076c5a978"}, {"t": "The influence of business environment on decision making", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163888988?h=40f7f800b3"}, {"t": "The marketing mix as applied in digital marketing", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157143348?h=5564f399ae"}, {"t": "The nature of work and HR planning", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163871430?h=27db8ddeaf"}, {"t": "The role of Human", "lv": "Level 3+4", "s": ["Business"], "u": ["Unit 3", "Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163867311?h=d0e0455136"}, {"t": "The stakeholders", "lv": "Level 3", "s": ["Business"], "u": ["Unit 1"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163262113?h=88bed8314e"}, {"t": "The use of business models to aid decision making", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163916406?h=28982a7910"}, {"t": "Theories of team development", "lv": "Level 3", "s": ["Business"], "u": ["Unit 9"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1164219364?h=565175d391"}, {"t": "Types of employment contract", "lv": "Level 3", "s": ["Business"], "u": ["Unit 8"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163874501?h=9c201e6456"}, {"t": "U17_LO1_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162073359?h=b578d76d0f"}, {"t": "U17_LO1_LA1_R3", "lv": "Level 5", "s": ["Business"], "u": ["Unit 34"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162518692?h=c28aad7aed"}, {"t": "U17_LO1_LA2_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162075818?h=7db56ee267"}, {"t": "U17_LO1_LA3_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162093869?h=f110a6f0de"}, {"t": "U17_LO2_LA4_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162097699?h=2acb33037a"}, {"t": "U17_LO3_LA1_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162103354?h=e4fd2cca47"}, {"t": "U17_LO3_LA4_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 17"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162109896?h=5710dc4bef"}, {"t": "U18_LO1_LA1_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162419384?h=46c93485a3"}, {"t": "U18_LO1_LA3_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162421628?h=9299173e82"}, {"t": "U18_LO2_LA1_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162424180?h=8914966271"}, {"t": "U18_LO2_LA3_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162426145?h=e12c1a1539"}, {"t": "U18_LO2_LA8_R4..", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162428969?h=d5acff4d71"}, {"t": "U18_LO3_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162431265?h=9ce4509719"}, {"t": "U18_LO3_LA3_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162433707?h=2e9ad530e5"}, {"t": "U18_LO4_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 18"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162437003?h=4667eff7eb"}, {"t": "U20_LO1_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 20", "Unit 56"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162441235?h=02ca385219"}, {"t": "U20_LO1_LA4_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 20"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162443512?h=0710e92c02"}, {"t": "U20_LO2_LA1_R2", "lv": "Level 3", "s": ["Business"], "u": ["Unit 20"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162461346?h=70cbb86390"}, {"t": "U20_LO3_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 20"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162463488?h=a1ba79ad8f"}, {"t": "U21_LO1_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 21"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162063120?h=013c751141"}, {"t": "U21_LO1_LA3_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 21"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162064597?h=c4c42b7e10"}, {"t": "U21_LO2_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 21"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162067337?h=0ee26f8268"}, {"t": "U25_LO1_LA1_R2", "lv": "Level 3", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162468110?h=ac3e5005af"}, {"t": "U25_LO1_LA3_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162471386?h=ae1810c4dc"}, {"t": "U25_LO2_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162474423?h=33cfd5a843"}, {"t": "U25_LO3_LA1_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 25"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162479326?h=39953ffc2f"}, {"t": "U30_LO1_LA1_R2", "lv": "Level 3", "s": ["Business"], "u": ["Unit 30"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162488628?h=7c91f9be12"}, {"t": "U30_LO1_LA3_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 30"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162493294?h=cb3f607acb"}, {"t": "U30_LO2_LA1_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 30"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162499744?h=d6c5758055"}, {"t": "U30_LO2_LA3_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 30"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162503892?h=7184ac39fe"}, {"t": "U30_LO3_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 30"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162508469?h=ed3ad236a3"}, {"t": "U5_LO1_LA1_R3", "lv": "Level 5", "s": ["Business"], "u": ["Unit 50", "Unit 56"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163155020?h=58687878af"}, {"t": "U5_LO1_LA3_R2", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161687139?h=c40ce3499c"}, {"t": "U5_LO1_LA3_R2", "lv": "Level 5", "s": ["Business"], "u": ["Unit 50", "Unit 56"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163156668?h=67bd116322"}, {"t": "U5_LO2_LA1_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161715160?h=2023829df1"}, {"t": "U5_LO2_LA3_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161727673?h=fa2681784c"}, {"t": "U5_LO2_LA6_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161740856?h=66e05a1773"}, {"t": "U5_LO2_LA6_R3", "lv": "Level 5", "s": ["Business"], "u": ["Unit 56"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163167167?h=1f9edb36c4"}, {"t": "U5_LO2_LA8_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161747395?h=c9c2496b83"}, {"t": "U5_LO3_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161751374?h=7c0d71c321"}, {"t": "U5_LO3_LA1_R3", "lv": "Level 5", "s": ["Business"], "u": ["Unit 50", "Unit 56"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163159121?h=128509f68a"}, {"t": "U5_LO3_LA3_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161759235?h=41ed1f20d4"}, {"t": "U5_LO3_LA6_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 5"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161763873?h=9b95dfc98c"}, {"t": "U6_LO1_LA1_R3", "lv": "Level 3+4", "s": ["Business"], "u": ["Unit 4", "Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161768454?h=80fe2519e2"}, {"t": "U6_LO1_LA2_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161772021?h=c2b162ae58"}, {"t": "U6_LO1_LA3_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1161774965?h=65db021fa4"}, {"t": "U6_LO1_LA5_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162047013?h=f183abcd10"}, {"t": "U6_LO1_LA7_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162048647?h=13c97b3195"}, {"t": "U6_LO2_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162053527?h=b9f09f179b"}, {"t": "U6_LO2_LA5_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162056122?h=a774085258"}, {"t": "U6_LO3_LA1_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162057941?h=c1911af62a"}, {"t": "U6_LO3_LA5_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 6"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162060001?h=20fe54e07f"}, {"t": "U7 final assessment_R4", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163929891?h=b879a1d27d"}, {"t": "U7_LO4_LA3_R2", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163955734?h=7596f68302"}, {"t": "U8_LO1_LA9_R3", "lv": "Level 3", "s": ["Business"], "u": ["Unit 21"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1162069379?h=8a4723c3e7"}, {"t": "Use of financial ratios in decision-making", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163927406?h=e5ee88a7cd"}, {"t": "Using break-even analysis in decision making", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163932693?h=4f85e1883a"}, {"t": "Using financial analysis for investment decisions", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157182973?h=d5def0d831"}, {"t": "Valuation measures", "lv": "MBA", "s": [], "u": ["Unit 3"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157185983?h=593d0be0bc"}, {"t": "Video 1", "lv": "MBA", "s": [], "u": [], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1129149103?h=c3b11890c0"}, {"t": "Video 1", "lv": "Unknown", "s": [], "u": [], "p": "", "cr": 0, "lk": ""}, {"t": "What is a product cycle", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163521906?h=d840b28164"}, {"t": "What is balance sheet", "lv": "Level 3", "s": ["Business"], "u": ["Unit 3"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163562914?h=8273b8cbcf"}, {"t": "What is marketing and its process", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1156588757?h=fbd3159bf3"}, {"t": "What is marketing campaign", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163520520?h=e181dd326b"}, {"t": "What is marketing communication?", "lv": "MBA", "s": [], "u": ["Unit 1"], "p": "", "cr": 0, "lk": "https://player.vimeo.com/video/1157145149?h=e9647af652"}, {"t": "What is marketing communication", "lv": "Level 4", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163223455?h=31eb74fb23"}, {"t": "What is marketing communication", "lv": "Level 3", "s": ["Business"], "u": ["Unit 2"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163529789?h=db513603a0"}, {"t": "\u2018What if\u2019 scenarios and sensitivity analysis", "lv": "Level 3", "s": ["Business"], "u": ["Unit 7"], "p": "GBS Dubai", "cr": 0, "lk": "https://player.vimeo.com/video/1163939311?h=bc8f3fa8fe"}];
+
+// ─── STATE ───
+const state = {
+  search: '',
+  level: 'all',
+  subject: 'all',
+  builder: [],   // indices into VIDEOS
+  openVideo: null,
+};
+
+// ─── LEVEL CONFIG ───
+const LEVEL_CFG = {
+  'MBA':      { color: '#4F46E5', bg: 'rgba(79,70,229,0.1)',  label: 'MBA'     },
+  'Level 3':  { color: '#059669', bg: 'rgba(5,150,105,0.1)',  label: 'Level 3' },
+  'Level 4':  { color: '#D97706', bg: 'rgba(217,119,6,0.1)',  label: 'Level 4' },
+  'Level 3+4':{ color: '#DB2777', bg: 'rgba(219,39,119,0.1)', label: 'L3 & 4' },
+  'Level 5':  { color: '#7C3AED', bg: 'rgba(124,58,237,0.1)', label: 'Level 5' },
+  'CPD':      { color: '#0891B2', bg: 'rgba(8,145,178,0.1)',  label: 'CPD'     },
+};
+
+// ─── UNIT NAMES ───
+const UNIT_NAMES = {
+  MBA: {
+    'Unit 1':  'Digital Marketing',
+    'Unit 2':  'Global Strategy',
+    'Unit 3':  'Managerial Finance',
+    'Unit 4':  'Leadership & OB',
+    'Unit 5':  'Contemporary Marketing',
+    'Unit 6':  'Strategic Marketing',
+    'Unit 12': 'Project Management',
+  },
+  'Level 3': {
+    'Unit 1': 'Business Foundations',
+    'Unit 2': 'Marketing Fundamentals',
+    'Unit 3': 'Business Finance',
+    'Unit 4': 'Event Management',
+    'Unit 5': 'Business Essentials',
+    'Unit 6': 'Business Operations',
+    'Unit 7': 'Business Analysis',
+    'Unit 8': 'Human Resources',
+    'Unit 9': 'Team Management',
+    'Unit 17': 'Digital Advertising',
+    'Unit 18': 'Business Skills',
+    'Unit 20': 'Business Planning',
+    'Unit 21': 'Business Research',
+    'Unit 25': 'International Business',
+    'Unit 30': 'Business Strategy',
+  },
+  'Level 4': {
+    'Unit 1': 'Business Organisations',
+    'Unit 2': 'Marketing',
+    'Unit 3': 'Performance Management',
+    'Unit 5': 'Business Finance',
+    'Unit 9': 'Organisational Structure',
+  },
+  'Level 5': {
+    'Unit 25': 'International Business',
+  },
+};
+
+function getUnitName(level, unit) {
+  const lvlMap = UNIT_NAMES[level] || {};
+  return lvlMap[unit] || unit;
+}
+
+// ─── FILTER ───
+function getFiltered() {
+  const q = state.search.toLowerCase().trim();
+  return VIDEOS.map((v, i) => ({ v, i })).filter(({ v }) => {
+    if (state.level !== 'all' && v.lv !== state.level) return false;
+    if (state.subject !== 'all' && !v.s.includes(state.subject)) return false;
+    if (q && !v.t.toLowerCase().includes(q) && !v.u.join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+// ─── RENDER ───
+function render() {
+  const filtered = getFiltered();
+  document.getElementById('results-count').textContent = `${filtered.length} video${filtered.length !== 1 ? 's' : ''}`;
+  document.getElementById('stat-builder').textContent = state.builder.length;
+  document.getElementById('builder-count').textContent = state.builder.length;
+
+  const root = document.getElementById('catalogue-root');
+
+  if (filtered.length === 0) {
+    root.innerHTML = `<div class="no-results">
+      <div class="no-results-icon">🔍</div>
+      <h3>No videos found</h3>
+      <p>Try adjusting your search or filters</p>
+    </div>`;
+    return;
+  }
+
+  // Group by level then unit
+  const groups = {};
+  filtered.forEach(({ v, i }) => {
+    const lv = v.lv;
+    const units = v.u.length ? v.u : ['—'];
+    units.forEach(u => {
+      const key = lv + '||' + u;
+      if (!groups[key]) groups[key] = { lv, unit: u, items: [] };
+      if (!groups[key].items.find(x => x.i === i)) groups[key].items.push({ v, i });
+    });
+  });
+
+  // Sort groups: MBA first, then L3, L4, L3+4, L5, CPD; within level by unit
+  const LEVEL_ORDER = ['MBA','Level 3','Level 4','Level 3+4','Level 5','CPD'];
+  const sortedGroups = Object.values(groups).sort((a, b) => {
+    const li = LEVEL_ORDER.indexOf(a.lv);
+    const lj = LEVEL_ORDER.indexOf(b.lv);
+    if (li !== lj) return li - lj;
+    return a.unit.localeCompare(b.unit, undefined, { numeric: true });
+  });
+
+  let html = '';
+  sortedGroups.forEach(g => {
+    const cfg = LEVEL_CFG[g.lv] || { color: '#888', bg: '#eee', label: g.lv };
+    const unitName = getUnitName(g.lv, g.unit);
+    html += `<div class="unit-group">
+      <div class="unit-group-header">
+        <div class="unit-group-bar" style="background:${cfg.color}"></div>
+        <div>
+          <div class="unit-group-label" style="color:${cfg.color}">${cfg.label}</div>
+          <div class="unit-group-name">${g.unit !== '—' ? g.unit + ' · ' : ''}${unitName}</div>
+        </div>
+        <div class="unit-group-count">${g.items.length} video${g.items.length !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="cards-grid">`;
+    g.items.forEach(({ v, i }) => {
+      html += renderCard(v, i);
+    });
+    html += `</div></div>`;
+  });
+
+  root.innerHTML = html;
+  attachCardListeners();
+}
+
+function renderCard(v, i) {
+  const cfg = LEVEL_CFG[v.lv] || { color: '#888', bg: '#eee', label: v.lv };
+  const inBuilder = state.builder.includes(i);
+  const chips = v.u.map(u => `<span class="card-unit-chip">${u}</span>`).join('');
+  const addBtn = inBuilder
+    ? `<button class="card-add-btn" data-idx="${i}" title="Remove from builder">✓</button>`
+    : `<button class="card-add-btn" data-idx="${i}" title="Add to builder">+</button>`;
+  const credits = v.cr > 0 ? `<span class="card-credits">${v.cr} CPD</span>` : '';
+  return `<div class="card${inBuilder ? ' in-builder' : ''}" data-idx="${i}">
+    <div class="card-accent" style="background:linear-gradient(90deg,${cfg.color},${cfg.color}88)"></div>
+    <div class="card-body">
+      <div class="card-level-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</div>
+      <div class="card-title">${escHtml(v.t)}</div>
+      <div class="card-units">${chips}</div>
+    </div>
+    <div class="card-footer">
+      <div class="card-footer-left">
+        <span class="card-type">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Video
+        </span>
+        ${credits}
+      </div>
+      ${addBtn}
+    </div>
+  </div>`;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function attachCardListeners() {
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.card-add-btn')) return; // handled separately
+      const idx = parseInt(card.dataset.idx);
+      openVideoModal(idx);
+    });
+  });
+  document.querySelectorAll('.card-add-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = parseInt(btn.dataset.idx);
+      toggleBuilder(idx);
+    });
+  });
+}
+
+// ─── BUILDER ───
+function toggleBuilder(idx) {
+  const pos = state.builder.indexOf(idx);
+  if (pos === -1) {
+    state.builder.push(idx);
+    showToast('Added to Course Builder ✓');
+  } else {
+    state.builder.splice(pos, 1);
+    showToast('Removed from builder');
+  }
+  updateBuilder();
+  render();
+}
+
+function updateBuilder() {
+  const count = state.builder.length;
+  document.getElementById('builder-count').textContent = count;
+  document.getElementById('stat-builder').textContent = count;
+
+  const empty = document.getElementById('builder-empty');
+  const items = document.getElementById('builder-items');
+  const btnRec = document.getElementById('btn-recommend');
+  const btnClear = document.getElementById('btn-clear');
+
+  empty.style.display = count === 0 ? '' : 'none';
+  btnRec.disabled = count === 0;
+  btnClear.style.display = count === 0 ? 'none' : '';
+
+  items.innerHTML = state.builder.map(idx => {
+    const v = VIDEOS[idx];
+    return `<div class="builder-item">
+      <div class="builder-item-title">${escHtml(v.t)}</div>
+      <button class="builder-remove" data-idx="${idx}">×</button>
+    </div>`;
+  }).join('');
+
+  items.querySelectorAll('.builder-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.idx);
+      toggleBuilder(idx);
+    });
+  });
+}
+
+// ─── VIDEO MODAL ───
+function openVideoModal(idx) {
+  const v = VIDEOS[idx];
+  const cfg = LEVEL_CFG[v.lv] || { color: '#888', bg: '#eee', label: v.lv };
+  state.openVideo = idx;
+
+  // Embed
+  const wrap = document.getElementById('video-embed-wrap');
+  if (v.lk) {
+    wrap.innerHTML = `<iframe src="${v.lk}&autoplay=1&title=0&byline=0&portrait=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+  } else {
+    wrap.innerHTML = `<div class="video-embed-placeholder">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <p>No video link available</p>
+    </div>`;
+  }
+
+  // Badge
+  const badge = document.getElementById('modal-level-badge');
+  badge.textContent = cfg.label;
+  badge.style.background = cfg.bg;
+  badge.style.color = cfg.color;
+
+  document.getElementById('modal-title').textContent = v.t;
+
+  // Meta
+  const meta = [];
+  if (v.u.length) meta.push(`<div class="modal-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>${v.u.join(', ')}</div>`);
+  if (v.s.length) meta.push(`<div class="modal-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>${v.s.join(', ')}</div>`);
+  if (v.p) meta.push(`<div class="modal-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${v.p}</div>`);
+  if (v.cr > 0) meta.push(`<div class="modal-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>${v.cr} CPD Credits</div>`);
+  document.getElementById('modal-meta').innerHTML = meta.join('');
+
+  // Add/remove button
+  const inBuilder = state.builder.includes(idx);
+  const addBtn = document.getElementById('modal-btn-add');
+  addBtn.textContent = inBuilder ? '✕ Remove from Builder' : '+ Add to Course Builder';
+  addBtn.className = 'modal-btn-add' + (inBuilder ? ' remove' : '');
+
+  // Vimeo link
+  const vimeoBtn = document.getElementById('modal-btn-vimeo');
+  if (v.lk) {
+    vimeoBtn.href = v.lk;
+    vimeoBtn.style.display = 'flex';
+  } else {
+    vimeoBtn.style.display = 'none';
+  }
+
+  document.getElementById('video-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVideoModal() {
+  document.getElementById('video-modal-overlay').classList.remove('open');
+  document.getElementById('video-embed-wrap').innerHTML = '';
+  document.body.style.overflow = '';
+  state.openVideo = null;
+}
+
+document.getElementById('video-modal-close').addEventListener('click', closeVideoModal);
+document.getElementById('video-modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('video-modal-overlay')) closeVideoModal();
+});
+document.getElementById('modal-btn-add').addEventListener('click', () => {
+  if (state.openVideo !== null) {
+    toggleBuilder(state.openVideo);
+    closeVideoModal();
+  }
+});
+
+// ─── RECOMMENDATIONS ───
+let selectedRecIdx = null;
+let currentRecs = [];
+let currentBuilderVideos = [];
+
+function openRecommendations() {
+  if (state.builder.length === 0) return;
+  const selected = state.builder.map(i => VIDEOS[i]);
+  currentBuilderVideos = selected;
+  selectedRecIdx = null;
+
+  const levels = [...new Set(selected.map(v => v.lv))];
+  const subjects = [...new Set(selected.flatMap(v => v.s))];
+  const hasMBA = levels.includes('MBA');
+  const hasL3 = levels.includes('Level 3') || levels.includes('Level 3+4');
+  const hasL4 = levels.includes('Level 4') || levels.includes('Level 3+4');
+  const hasL5 = levels.includes('Level 5');
+  const n = selected.length;
+  const titles = selected.map(v => v.t);
+  const allUnits = [...new Set(selected.flatMap(v => v.u))];
+
+  const hasMarketing  = titles.some(t => /marketing|brand|campaign|advertising|consumer|4ps|7ps/i.test(t));
+  const hasFinance    = titles.some(t => /finance|financial|ratio|balance|cash flow|p&l|profit|cost|revenue|investment|break.even/i.test(t));
+  const hasLeadership = titles.some(t => /leadership|management|organisational|motivation|team/i.test(t));
+  const hasSustain    = subjects.includes('Sustainability');
+  const hasProject    = titles.some(t => /project|stakeholder|procurement|planning/i.test(t));
+
+  const recs = [];
+
+  recs.push({
+    type: 'CPD Course', badge: 'Non-credited', badgeColor: '#6B7591',
+    title: 'CPD Short Course Bundle',
+    desc: `A self-paced CPD bundle covering ${subjects.join(', ')} across ${allUnits.length} topic area${allUnits.length !== 1 ? 's' : ''}. Ideal for professionals seeking flexible upskilling without formal assessment.`,
+    videos: selected,
+  });
+
+  if (n >= 2 && n <= 8) {
+    recs.push({
+      type: 'Uncredited', badge: 'Micro-Credential', badgeColor: '#0891B2',
+      title: 'Micro-Credential: ' + (hasMarketing ? 'Digital Business' : hasFinance ? 'Financial Literacy' : hasLeadership ? 'Leadership Essentials' : 'Business Foundations'),
+      desc: `A focused ${n}-video micro-credential completable in a short timeframe. No formal assessment — perfect for individual learner journeys or corporate L&D programmes.`,
+      videos: selected,
+    });
+  }
+
+  if (n >= 4) {
+    let creditLevel = hasMBA ? 'Postgraduate' : hasL5 ? 'Level 5' : hasL4 ? 'Level 4' : 'Level 3';
+    recs.push({
+      type: 'Credited', badge: `${creditLevel} Short Course`, badgeColor: '#0057FF',
+      title: `Credited Short Course (${creditLevel})`,
+      desc: `This selection can be structured into a formally assessed credited short course at ${creditLevel}. Learners receive academic credit upon successful completion.`,
+      videos: selected,
+    });
+  }
+
+  if (hasMarketing && n >= 5) {
+    recs.push({
+      type: 'Certificate', badge: 'Specialist Path', badgeColor: '#7C3AED',
+      title: 'Certificate in Digital & Strategic Marketing',
+      desc: 'A curated marketing pathway combining digital marketing fundamentals, strategic planning, consumer behaviour and brand management.',
+      videos: selected.filter(v => /marketing|brand|campaign|digital|consumer|4ps/i.test(v.t)),
+    });
+  }
+
+  if (hasFinance && n >= 4) {
+    recs.push({
+      type: 'Certificate', badge: 'Specialist Path', badgeColor: '#059669',
+      title: 'Certificate in Financial Literacy for Business',
+      desc: 'A practical finance pathway covering financial statements, ratios, cash flow, investment appraisal and decision-making tools.',
+      videos: selected.filter(v => /finance|financial|ratio|cash|profit|balance|break.even|investment/i.test(v.t)),
+    });
+  }
+
+  if (hasLeadership && n >= 3) {
+    recs.push({
+      type: 'CPD Course', badge: 'Leadership CPD', badgeColor: '#D97706',
+      title: 'Leadership & Management Essentials CPD',
+      desc: 'A leadership-focused CPD programme exploring management styles, team dynamics, organisational behaviour and leadership in the digital age.',
+      videos: selected.filter(v => /leadership|management|team|motivat|organis/i.test(v.t)),
+    });
+  }
+
+  if (hasSustain) {
+    recs.push({
+      type: 'Micro-Credential', badge: 'SDG Aligned', badgeColor: '#059669',
+      title: 'SDG Micro-Credential Bundle (UNITAR Aligned)',
+      desc: 'A sustainability-focused micro-credential aligned with UN Sustainable Development Goals covering responsible business and financial inclusion.',
+      videos: selected.filter(v => /SDG|sustainab|UN|employment/i.test(v.t)),
+    });
+  }
+
+  if (hasProject && n >= 3) {
+    recs.push({
+      type: 'Certificate', badge: 'Specialist Path', badgeColor: '#4F46E5',
+      title: 'Certificate in Project Management',
+      desc: 'A structured project management pathway covering planning, stakeholder engagement, risk, execution and post-implementation review.',
+      videos: selected.filter(v => /project|stakeholder|risk|planning|procurement/i.test(v.t)),
+    });
+  }
+
+  currentRecs = recs;
+
+  document.getElementById('rec-modal-desc').textContent =
+    `Based on your ${n} selected video${n !== 1 ? 's' : ''} across ${subjects.join(' & ')}, here are the course pathways we recommend. Select one to download a LMS-ready CSV.`;
+
+  const body = document.getElementById('rec-modal-body');
+  body.innerHTML = recs.map((r, ri) => {
+    const previewTitles = r.videos.slice(0, 3).map(v =>
+      `<span class="rec-video-chip">${escHtml(v.t.length > 40 ? v.t.slice(0,40)+'…' : v.t)}</span>`
+    ).join('');
+    const extra = r.videos.length > 3 ? `<span class="rec-video-chip" style="color:var(--muted)">+${r.videos.length - 3} more</span>` : '';
+    return `<div class="rec-card" data-ri="${ri}">
+      <div class="rec-card-top">
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <div class="rec-card-select-ring">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M2 5l2.5 2.5L8 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="rec-card-type">${r.type}</div>
+        </div>
+        <div class="rec-badge" style="background:${r.badgeColor}22;color:${r.badgeColor}">${r.badge}</div>
+      </div>
+      <div class="rec-card-title">${r.title}</div>
+      <div class="rec-card-desc">${r.desc}</div>
+      <div class="rec-card-videos">${previewTitles}${extra}</div>
+    </div>`;
+  }).join('');
+
+  // Attach selection handlers
+  body.querySelectorAll('.rec-card').forEach(card => {
+    card.addEventListener('click', () => {
+      body.querySelectorAll('.rec-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedRecIdx = parseInt(card.dataset.ri);
+      const rec = currentRecs[selectedRecIdx];
+      document.getElementById('rec-selected-name').textContent = rec.title;
+      document.getElementById('rec-selected-sub').textContent =
+        `${rec.videos.length} video${rec.videos.length !== 1 ? 's' : ''} · ${rec.type} · ${rec.badge}`;
+      document.getElementById('btn-download-csv').disabled = false;
+    });
+  });
+
+  // Reset download bar
+  document.getElementById('rec-selected-name').textContent = 'No course selected';
+  document.getElementById('rec-selected-sub').textContent = 'Select a recommended course above to download its LMS-ready CSV';
+  document.getElementById('btn-download-csv').disabled = true;
+
+  document.getElementById('rec-modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function downloadCourseCSV() {
+  if (selectedRecIdx === null) return;
+  const rec = currentRecs[selectedRecIdx];
+
+  // CSV columns: suitable for most LMS import formats (Moodle, Canvas, Blackboard style)
+  const headers = [
+    'Course Title',
+    'Module / Unit',
+    'Content Title',
+    'Content Type',
+    'Level',
+    'Subject',
+    'Partnership',
+    'CPD Credits',
+    'Vimeo Embed URL',
+    'Description / Notes',
+  ];
+
+  const rows = rec.videos.map(v => [
+    rec.title,
+    v.u.join('; ') || '—',
+    v.t,
+    'Video',
+    v.lv,
+    v.s.join('; ') || '—',
+    v.p || '—',
+    v.cr > 0 ? v.cr : '',
+    v.lk || '',
+    `${v.lv} level video content. Subject: ${v.s.join(', ')}. Unit: ${v.u.join(', ')}.`,
+  ]);
+
+  const csvContent = [headers, ...rows]
+    .map(row => row.map(cell => {
+      const s = String(cell == null ? '' : cell);
+      // Wrap in quotes if contains comma, quote, or newline
+      return (s.includes(',') || s.includes('"') || s.includes('\n'))
+        ? '"' + s.replace(/"/g, '""') + '"'
+        : s;
+    }).join(','))
+    .join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const safeName = rec.title.replace(/[^a-z0-9]+/gi, '_').toLowerCase();
+  a.href = url;
+  a.download = `globalu_course_${safeName}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('CSV downloaded ✓ Ready for LMS import');
+}
+
+function closeRecModal() {
+  document.getElementById('rec-modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+
+document.getElementById('rec-modal-close').addEventListener('click', closeRecModal);
+document.getElementById('rec-modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('rec-modal-overlay')) closeRecModal();
+});
+document.getElementById('btn-recommend').addEventListener('click', openRecommendations);
+document.getElementById('btn-download-csv').addEventListener('click', downloadCourseCSV);
+document.getElementById('btn-clear').addEventListener('click', () => {
+  state.builder = [];
+  updateBuilder();
+  render();
+  showToast('Builder cleared');
+});
+
+// ─── FILTER CONTROLS ───
+document.getElementById('search-input').addEventListener('input', e => {
+  state.search = e.target.value;
+  render();
+});
+
+document.querySelectorAll('.pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    state.level = pill.dataset.level;
+    render();
+  });
+});
+
+document.querySelectorAll('.subject-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.subject = btn.dataset.subject;
+    render();
+  });
+});
+
+// ─── KEYBOARD ───
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeVideoModal(); closeRecModal(); }
+});
+
+// ─── TOAST ───
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── INIT ───
+updateBuilder();
+render();
+</script>
+</body>
+</html>
